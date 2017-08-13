@@ -25,6 +25,7 @@
 // pins - voltage on outputs are ~1.5V so we use the ADC
 #define DataPin A0
 #define ClkPin  A1
+#define LedPin  13 
 
 // UART speed
 #define UARTBaudRate 115200
@@ -63,9 +64,7 @@ long getValue(bool &inch) {
     inch = out & (1L << INCH_BIT);
     bool sign = out & (1L << SIGN_BIT);
     out &= (1L << SIGN_BIT) - 1L;
-    if (START_BIT > 0) {
-        out >>= START_BIT;
-    }
+    out >>= (START_BIT+1);
     if (sign)
         out = -out;
     return out;
@@ -94,6 +93,14 @@ void prettyPrintValue(long value, bool inch) {
     }
 }
 
+void toggleLed() {
+#ifdef LedPin
+  static bool state = false;  
+  state = !state;
+  digitalWrite(LedPin, state);
+#endif
+}
+
 // Arduino setup and main loop
 
 // defines for setting and clearing register bits
@@ -112,6 +119,9 @@ void setup() {
     cbi(ADCSRA, ADPS0);
 
     Serial.begin(UARTBaudRate);
+#ifdef LedPin
+    pinMode(LedPin, OUTPUT);
+#endif
 }
 
 void loop() {
@@ -126,6 +136,9 @@ void loop() {
 
     // pretty print measured value
     prettyPrintValue(value, inch);
+
+    // toggle LED
+    toggleLed();
 
     // uncomment if you are interested in optimal ADC_Threshold value
     //Serial.print(' '); Serial.print(analogRead(ClkPin)/2);
