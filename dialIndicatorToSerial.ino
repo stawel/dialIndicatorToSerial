@@ -25,13 +25,17 @@
 // pins - voltage on outputs are ~1.5V so we use the ADC
 #define DataPin A0
 #define ClkPin  A1
-#define LedPin  13 
+#define LedPin  13
+
+// Dial Indicator resolution: 100 - 0.01mm, 1000 - 0.001mm
+//#define Resolution 100
+#define Resolution 1000
 
 // UART speed
 #define UARTBaudRate 115200
 
 // ADC threshold, ADC values greater than this are interpreted as logical 1, see loop()
-#define ADC_Threshold 160
+#define ADC_Threshold 140
 
 // data format
 #define DATA_BITS_LEN 24
@@ -83,19 +87,28 @@ void printBits(long v) {
 
 void prettyPrintValue(long value, bool inch) {
     double v = value;
+#if Resolution == 100
     if (inch) {
         Serial.print(v / 2000, 4);
         Serial.print(" in");
-
     } else {
         Serial.print(v / 100, 2);
         Serial.print(" mm");
     }
+#else
+    if (inch) {
+        Serial.print(v / 20000, 5);
+        Serial.print(" in");
+    } else {
+        Serial.print(v / 1000, 3);
+        Serial.print(" mm");
+    }
+#endif
 }
 
 void toggleLed() {
 #ifdef LedPin
-  static bool state = false;  
+  static bool state = false;
   state = !state;
   digitalWrite(LedPin, state);
 #endif
