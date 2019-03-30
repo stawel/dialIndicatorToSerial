@@ -13,6 +13,8 @@ Tested on:
 
 # UART Output:
 ```
+$ minicom -b 115200 -D /dev/ttyUSB0
+
 15052 ms 1.47 mm
 15177 ms 1.52 mm
 15302 ms 1.52 mm
