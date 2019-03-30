@@ -28,3 +28,5 @@ Tested on:
 # Related materials
 1. program is based on http://wei48221.blogspot.tw/2016/01/using-digital-caliper-for-digital-read_21.html
 1. https://hackaday.io/project/511-digital-dial-indicator-cnc-surface-probe
+
+![chinese dial indicator](docs/chineseDialIndicator.jpg)
